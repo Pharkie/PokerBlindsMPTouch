@@ -10,6 +10,7 @@ from gui.widgets import Label, Button, CloseButton, BitMap
 from gui.core.writer import CWriter
 import gui.fonts.freesans20 as font
 from gui.core.colors import *
+import os
 
 
 class BaseScreen(Screen):
@@ -21,20 +22,34 @@ class BaseScreen(Screen):
         row = 2
         Label(wri, row, col, "Bitmap Demo.")
         row = 25
-        self.graphic = BitMap(wri, row, col, 99, 99, fgcolor=WHITE, bgcolor=BLACK)
+        self.graphic = BitMap(
+            wri, row, col, 99, 99, fgcolor=WHITE, bgcolor=BLACK
+        )
         col = 120
-        Button(wri, row, col, height=25, text="Next", litcolor=LIGHTGREEN, callback=self.cb)
+        Button(
+            wri,
+            row,
+            col,
+            height=25,
+            text="Next",
+            litcolor=LIGHTGREEN,
+            callback=self.cb,
+        )
         CloseButton(wri)  # Quit the application
         self.image = 0
 
     def cb(self, _):
-        self.graphic.value(f"/m{self.image:02d}")
-        self.image += 1
-        self.image %= 4
-        if self.image == 3:
-            self.graphic.color(BLUE)
+        file_path = f"/optional/bitmaps/m{self.image:02d}"
+        if file_path.split("/")[-1] in os.listdir("/optional/bitmaps"):
+            self.graphic.value(file_path)
+            self.image += 1
+            self.image %= 4
+            if self.image == 3:
+                self.graphic.color(BLUE)
+            else:
+                self.graphic.color(WHITE)
         else:
-            self.graphic.color(WHITE)
+            print(f"File not found: {file_path}")
 
 
 def test():

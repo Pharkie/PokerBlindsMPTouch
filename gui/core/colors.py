@@ -5,6 +5,7 @@
 from hardware_setup import SSD
 from gui.core.writer import CWriter
 
+
 # Code can be portable between 4-bit and other drivers by calling create_color
 def create_color(idx, r, g, b):
     return CWriter.create_color(SSD, idx, r, g, b)
@@ -24,6 +25,7 @@ if hasattr(SSD, "lut"):  # Colors defined by LUT
     DARKGREEN = create_color(10, 0, 80, 0)
     DARKBLUE = create_color(11, 0, 0, 90)
     # 12, 13, 14 free for user definition
+    DARKORANGE = create_color(12, 255, 136, 0)
     WHITE = create_color(15, 255, 255, 255)
 else:
     BLACK = SSD.rgb(0, 0, 0)
