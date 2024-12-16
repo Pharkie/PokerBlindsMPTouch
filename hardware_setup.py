@@ -22,10 +22,11 @@
 
 import gc
 from machine import Pin, SPI, I2C
-from drivers.gc9a01.gc9a01 import GC9A01 as SSD
+
+# from drivers.gc9a01.gc9a01 import GC9A01 as SSD
 
 # May use either driver.
-# from drivers.gc9a01.gc9a01_8_bit import GC9A01 as SSD
+from drivers.gc9a01.gc9a01_8_bit import GC9A01 as SSD
 
 pdc = Pin(8, Pin.OUT, value=0)
 pcs = Pin(9, Pin.OUT, value=1)
@@ -40,7 +41,7 @@ spi = SPI(1, 33_000_000, sck=Pin(10), mosi=Pin(11), miso=Pin(12))
 ssd = SSD(spi, pcs, pdc, prst)  # Bool options lscape, usd, mirror
 from gui.core.tgui import Display, quiet
 
-quiet()  # Comment this out for periodic free RAM messages
+# quiet()  # Comment this out for periodic free RAM messages
 
 # Touch configuration.
 from touch.cst816s import CST816S

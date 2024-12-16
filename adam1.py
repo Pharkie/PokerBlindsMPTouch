@@ -91,6 +91,18 @@ class PolarScreen(Screen):
         PolarCurve(self.g, color, gen)  # populate graph.
 
 
+class LogoScreen(Screen):
+    def __init__(self):
+        super().__init__()
+
+    def after_open(self):
+        fn = "mylogo.bin"  # Image created by`img_cvt.py`
+
+        with open(fn, "rb") as f:
+            _ = f.read(4)  # Read and discard rows and cols
+            f.readinto(ssd.mvb)  # Read the image into the frame buffer
+
+
 class BaseScreen(Screen):
     def __init__(self):
         super().__init__()
@@ -106,7 +118,7 @@ class BaseScreen(Screen):
 
 def test():
     print("Starting program")
-    Screen.change(BaseScreen)
+    Screen.change(LogoScreen)
 
 
 test()
