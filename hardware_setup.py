@@ -41,7 +41,7 @@ spi = SPI(1, 33_000_000, sck=Pin(10), mosi=Pin(11), miso=Pin(12))
 ssd = SSD(spi, pcs, pdc, prst)  # Bool options lscape, usd, mirror
 from gui.core.tgui import Display, quiet
 
-# quiet()  # Comment this out for periodic free RAM messages
+quiet()  # Comment this out for periodic free RAM messages
 
 # Touch configuration.
 from touch.cst816s import CST816S

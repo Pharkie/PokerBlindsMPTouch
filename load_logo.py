@@ -67,10 +67,15 @@ class BaseScreen(Screen):
 
 
 class CountdownScreen(Screen):
-    def __init__(self):
+    def __init__(self, countdown_seconds=12):
         super().__init__()
-        self.remaining_time = 10 * 60  # 10 minutes in seconds
+        self.initial_countdown = (
+            countdown_seconds  # Store the initial countdown duration
+        )
+        self.remaining_time = countdown_seconds  # Set countdown duration
         self.timer = Timer(-1)
+        self.small_blind = 50  # Initial small blind value
+        self.big_blind = 100  # Initial big blind value
         self.update_display()  # Display initial time
         self.start_timer()  # Start the timer
 
@@ -78,7 +83,9 @@ class CountdownScreen(Screen):
         minutes = self.remaining_time // 60
         seconds = self.remaining_time % 60
         time_str = f"{minutes:02}:{seconds:02}"
-        Label(wri, 100, 100, time_str, fgcolor=WHITE)
+        Label(wri, 40, 50, f"Small: {self.small_blind}", fgcolor=WHITE)
+        Label(wri, 80, 50, f"Big: {self.big_blind}", fgcolor=WHITE)
+        Label(wri, 100, 110, time_str, fgcolor=WHITE)
 
     def start_timer(self):
         self.timer.init(period=1000, mode=Timer.PERIODIC, callback=self.tick)
@@ -88,8 +95,16 @@ class CountdownScreen(Screen):
             self.remaining_time -= 1
             self.update_display()
         else:
-            self.timer.deinit()
-            Screen.back()
+            self.double_blinds()
+            self.remaining_time = (
+                self.initial_countdown
+            )  # Reset to the initial countdown duration
+            self.update_display()  # Update display immediately
+            self.start_timer()  # Restart the timer without delay
+
+    def double_blinds(self):
+        self.big_blind *= 2
+        self.small_blind *= 2
 
     def cb(self, _):  # Change to LogoScreen
         Screen.back()
