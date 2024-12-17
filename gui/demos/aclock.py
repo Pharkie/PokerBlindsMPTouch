@@ -39,7 +39,20 @@ async def aclock(dial, lbldate, lbltim):
         return "th"
 
     days = ("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
-    months = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+    months = (
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+    )
 
     hrs = Pointer(dial)
     mins = Pointer(dial)
@@ -56,7 +69,9 @@ async def aclock(dial, lbldate, lbltim):
         secs.value(sstart * uv(-t[5] * pi / 30), RED)
         lbltim.value("{:02d}.{:02d}.{:02d}".format(t[3], t[4], t[5]))
         lbldate.value(
-            "{} {}{} {} {}".format(days[t[6]], t[2], suffix(t[2]), months[t[1] - 1], t[0])
+            "{} {}{} {} {}".format(
+                days[t[6]], t[2], suffix(t[2]), months[t[1] - 1], t[0]
+            )
         )
         await asyncio.sleep(1)
 
