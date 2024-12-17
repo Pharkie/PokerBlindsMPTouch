@@ -7,6 +7,8 @@
 import hardware_setup
 from machine import Timer
 import time
+import asyncio
+import LED_ring  # Import LED_ring module
 
 from gui.core.writer import CWriter
 from gui.core.tgui import Screen, ssd
@@ -79,6 +81,8 @@ class CountdownScreen(Screen):
         self.update_display()  # Display initial time
         self.start_timer()  # Start the timer
 
+        asyncio.create_task(LED_ring.spin_with_trail())
+
     def update_display(self):
         minutes = self.remaining_time // 60
         seconds = self.remaining_time % 60
@@ -110,10 +114,11 @@ class CountdownScreen(Screen):
         Screen.back()
 
 
-def main():
+async def main():
     print("Starting program")
 
+    asyncio.create_task(LED_ring.startup_effect())
     Screen.change(LogoScreen)  # Load the logo
 
 
-main()
+asyncio.run(main())
