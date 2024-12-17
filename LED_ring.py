@@ -29,7 +29,7 @@ async def spin_with_trail():
             else:
                 np[j] = (0, 0, 0)  # Turn off
         np.write()
-        await asyncio.sleep(ANIMATION_WAIT)
+        await asyncio.sleep(2 * ANIMATION_WAIT)
 
 
 # Function to flash all LEDs with a specific color once per second

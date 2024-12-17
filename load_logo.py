@@ -5,9 +5,8 @@
 
 # Create SSD instance. Must be done first because of RAM use.
 import hardware_setup
-from machine import Timer
+import uasyncio as asyncio
 import time
-import asyncio
 import LED_ring  # Import LED_ring module
 
 from gui.core.writer import CWriter
@@ -75,13 +74,12 @@ class CountdownScreen(Screen):
             countdown_seconds  # Store the initial countdown duration
         )
         self.remaining_time = countdown_seconds  # Set countdown duration
-        self.timer = Timer(-1)
         self.small_blind = 50  # Initial small blind value
         self.big_blind = 100  # Initial big blind value
         self.update_display()  # Display initial time
-        self.start_timer()  # Start the timer
+        self.reg_task(self.start_timer())  # Start the timer
 
-        asyncio.create_task(LED_ring.spin_with_trail())
+        self.reg_task(self.run_led_ring())  # Run LED ring effect
 
     def update_display(self):
         minutes = self.remaining_time // 60
@@ -91,20 +89,22 @@ class CountdownScreen(Screen):
         Label(wri, 80, 50, f"Big: {self.big_blind}", fgcolor=WHITE)
         Label(wri, 100, 110, time_str, fgcolor=WHITE)
 
-    def start_timer(self):
-        self.timer.init(period=1000, mode=Timer.PERIODIC, callback=self.tick)
+    async def start_timer(self):
+        while True:
+            if self.remaining_time > 0:
+                self.remaining_time -= 1
+                self.update_display()
+            else:
+                self.double_blinds()
+                self.remaining_time = (
+                    self.initial_countdown
+                )  # Reset to the initial countdown duration
+                self.update_display()  # Update display immediately
+            await asyncio.sleep(1)  # Wait for 1 second
 
-    def tick(self, timer):
-        if self.remaining_time > 0:
-            self.remaining_time -= 1
-            self.update_display()
-        else:
-            self.double_blinds()
-            self.remaining_time = (
-                self.initial_countdown
-            )  # Reset to the initial countdown duration
-            self.update_display()  # Update display immediately
-            self.start_timer()  # Restart the timer without delay
+    async def run_led_ring(self):
+        while True:
+            await LED_ring.spin_with_trail()
 
     def double_blinds(self):
         self.big_blind *= 2
